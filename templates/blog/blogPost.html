@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %} Blog Post {% endblock title %} 
+{% block body %}
+{% load humanize %}
+{% load extras %}
+{% load static %}
+
+<div class="container my-3">
+  <article class="blog-post">
+    <h2 class="blog-post-title">{{post.title}}</h2>
+    <p class="blog-post-meta">
+      {{post.timeStamp}} by <a href="/about">{{post.author}}</a>
+      <span> : {{post.views}} Views</span>
+    </p>
+
+    <p>{{post.content|safe}}</p>
+    <hr />
+  </article>
+</div>
+
+<div class="container">
+  <h3>Comments ({{comments.count}}):</h3>
+  <div class="comment-wrapper my-2">  
+  {% if user.is_authenticated %}
+    <form action="/blog/PostComment" method="post">
+      {% csrf_token %}
+      <div class="form-group mb-3">
+        <textarea class="form-control" name="comment" placeholder="Write your comment here" cols="10" rows="3"></textarea>
+      </div>
+      <input type="hidden" name="postSno" id="postSno" value="{{post.sno}}" />
+      <input type="hidden" name="parentSno" id="parentSno" value="" />
+      <button type="submit" class="btn btn-primary">Post</button>
+    </form>
+  {% else %}
+    <b>Please <a href="/loginform">Login</a> to post comment.</b>
+  </div>
+  {% endif %}
+
+  {% for comment in comments %}
+    <div class="row my-2">
+      <div class="col-md-1">
+        <img class="rounded mx-auto d-block w-50 p-1 border border-dark my-2" src="/static/img/user.png" alt="user">
+      </div>
+      <div class="col-md-11">
+        <b>{{comment.user.username}} </b><span class="badge bg-secondary">{{comment.timeStamp | naturaltime}}</span>
+        <div> {{comment.comment}} </div>
+        <!--Reply Block START Here-->
+        <div class="reply">
+          {% if user.is_authenticated %}
+            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#replybox{{comment.sno}}" aria-expanded="false" aria-controls="replybox{{comment.sno}}">Reply</button>
+            <div class="collapse" id="replybox{{comment.sno}}">
+              <div class="card card-body my-2">
+                <form action="/blog/PostComment" method="post">
+                  {% csrf_token %}
+                <div class="form-group mb-3">
+                  <textarea class="form-control" name="comment" placeholder="Reply here" cols="10" rows="3"></textarea>
+                  <input type="hidden" name="parentSno" id="parentSno" value="{{comment.sno}}" />
+                </div>
+                <input type="hidden" name="postSno" id="postSno" value="{{post.sno}}" />
+                <button type="submit" class="btn btn-primary">Comment</button>
+                </form>
+              </div>
+            </div>
+          {% else %}
+            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#replybox{{comment.sno}}" aria-expanded="false" aria-controls="replybox{{comment.sno}}" disabled>Login to Reply</button>
+          {% endif %}
+          <div class="replies my-2">
+            {% for reply in replyDict|get_reply:comment.sno %}
+              <div class="row my-1">
+                <div class="col-md-1">
+                  <img class="rounded mx-auto d-block w-50 p-1 border border-dark my-2" src="/static/img/user.png" alt="user">
+                </div>
+                <div class="col-md-11">
+                  <b>{{comment.user.username}} </b><span class="badge bg-secondary">{{comment.timeStamp | naturaltime}}</span>
+                  <div> {{reply.comment}} </div>
+                  <br>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <!--Reply Block END Here-->
+      </div>
+    </div>
+  {% endfor %}
+</div>
+<!--Code for rendering post related videos embeded in page using YT api-->
+<div class="my-2 text-center">
+  <div class="container">
+      <form action="" id="form">
+          <div class="form-group">
+              <input type="text" class="form-control" id="search" value="{{post.title}}" hidden>
+          </div>
+          <div class="form-group">
+              <input type="submit" class="btn btn-primary" value="Show Related Videos">
+          </div>
+      </form>
+      <div class="row">
+          <div class="col-md-12">
+              <div id="videos">   
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<div class="my-2 text-center">
+    <a href="/blog" role="button" class="btn btn-primary p-2"> Go Back </a>
+</div>
+<!--Code End -->
+{% endblock body %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% block title %} Form {% endblock title %}
+
+{% block body %}
+    <!--Body STARTS HERE-->
+<div class="row">
+    <div class="col-sm-2">
+    </div>
+    <div class="col-sm-8">
+    <div class="card mt-4 p-1">
+        <div class="card-header text-center">
+        <b><h4>Create Post</h4></b>
+        </div>
+        <div class="card-body">
+            {% crispy form form.helper%}
+        </div>
+    </div>  
+    <div class="col-sm-2">
+    </div>
+</div>
+
+    <!--Use this without crispy forms helper-->
+    <!--
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit">
+    </form>
+    -->
+{% endblock body %}

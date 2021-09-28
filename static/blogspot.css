@@ -1,0 +1,13 @@
+.navbar-brand{
+    font-family: 'Cedarville Cursive', cursive;
+    color: blue;
+}
+
+body {
+    background-color: var(--bg);
+}
+
+.hero--header{
+    text-align: center;
+    align-items: center;
+}

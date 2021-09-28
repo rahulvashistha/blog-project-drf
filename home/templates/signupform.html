@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %} Sign Up {% endblock title %}
+{% block signupactive %} active {% endblock signupactive %}
+{% block body %}
+
+<!--START signup form -->
+<div class="row">
+  <div class="col-sm-2">
+  </div>
+  <div class="col-sm-8">
+    <div class="card mt-4 p-1">
+      <div class="card-header text-center">
+        <b><h4>Sign Up Here</h4></b>
+      </div>
+      <div class="card-body">
+        <form action='/signup' method='post'>
+          {% csrf_token %}
+          <h6 class="card-title">User Name</h6>
+          <input type="text" class="form-control" name="username" id="username" aria-describedby="username" required>
+          <h6 class="card-title mt-1">First Name</h6>
+          <input type="text" class="form-control" name="fname" id="fname" aria-describedby="fname" required>
+          <h6 class="card-title mt-1">Last Name</h6>
+          <input type="text" class="form-control" name="lname" id="lname" aria-describedby="lname" required>
+          <h6 class="card-title mt-1">Email address</h6>
+          <input name="email" type="email" class="form-control" id="email" aria-describedby="email" required>
+          <h6 class="card-title mt-1">Choose a Password</h6>
+          <input name="password1" type="password" class="form-control" id="password1" required>
+          <h6 class="card-title mt-1">Confirm your Password</h6>
+          <input name="password2" type="password" class="form-control" id="password2" required>
+          <div class="text-center"><button type="submit" class="btn btn-primary mt-3">Submit</button></div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-2">
+  </div>
+</div>
+<!--END signup form -->
+{% endblock body %}

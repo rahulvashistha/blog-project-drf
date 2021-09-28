@@ -1,0 +1,36 @@
+{% extends "base.html" %} 
+{% block title %}Blog Search Results {% endblock title %} 
+
+{% block body %}
+<div class="container">
+    <h2>Search Results by BlogPost:</h2>
+
+    {% if allPosts|length < 1 %}
+    Your search - <b> {{searchquery | truncatechars:50}} </b>- did not match any articles.
+    <br>
+    Suggestion:
+    <ul>
+    <li>Try different keyword.</li>
+    <li>Try more general keyword.</li>
+    <li>Try fewer keyword.</li>
+    </ul> 
+    {% endif %}
+
+    {% for post in allPosts %}
+    <div class="col-md-6 my-4">
+        <div class="card flex-md-row mb-4 box-shadow h-md-250">
+            <div class="card-body d-flex flex-column align-items-start">
+                <strong class="d-inline-block mb-2 text-primary">Article by {{post.author}}</strong>
+                <h3 class="mb-0">{{post.title}}</h3>
+                <div class="mb-1 text-muted">{{post.datetime}}</div>
+                <p class="card-text mb-auto">{{post.content | truncatechars:300}}</p>
+                <div class="my-2">
+                    <a href="/blog/{{post.slug}}" role="button" class="btn btn-primary">Continue reading</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock body %}

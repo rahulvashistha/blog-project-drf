@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %} Blog Post {% endblock title %} 
+{% block body %}
+{% load humanize %}
+{% load extras %}
+{% load static %}
+<!--Post Detail START -->
+<div class="container my-3">
+  <article class="blog-post">
+    <h2 class="blog-post-title">{{post.title}}</h2>
+    <p class="blog-post-meta">
+      {{post.timeStamp}} by <a href="/about">{{post.author}}</a>
+      <span> : {{post.views}} Views</span>
+    </p>
+    <p>{{post.content|safe}}</p>
+    <hr />
+  </article>
+</div>
+<!--Post Detail END -->
+
+<div class="container">
+  <h3>Comments ({{comments.count}}):</h3>
+  <div class="comment-wrapper">
+    {% if user.is_authenticated %}
+    <!--Comment Form START -->
+    <div class="card my-3">
+      <div class="card-body">
+        <textarea class="form-control" id="commenttext" name="comment" placeholder="Write your comment here" cols="10" rows="3"></textarea>
+        <input type="hidden" name="postSno" id="postSno" value="{{post.sno}}" />
+        <input type="hidden" name="parentSno" id="parentSno" value="{{comment.sno}}" />
+        <input type="hidden" name="timestamp" id="timestamp" value="{{comment.timeStamp | naturaltime}}" />
+        <button type="button" class="btn btn-primary mt-2" id="postcomment">Comment</button>
+      </div>
+    </div>
+    {% else %}
+      <b>Please <a href="/loginform">Login</a> to post comment.</b>
+    </div>
+    {% endif %}
+    <!--Comment Form END-->
+    <!--Comment SECTION START-->
+    {% for comment in comments %}
+    <div class="card my-3">
+      <div class="card-body">
+        <b>{{comment.user.username}} </b><span class="badge bg-secondary">{{comment.timeStamp | naturaltime}}</span>
+        <div> {{comment.comment}} </div>
+      </div>
+    </div>
+    {% endfor %}
+    <!--Comment SECTION END-->
+  </div>
+</div>
+
+<!--Code for rendering post related videos embeded in page using YT api-->
+<div class="my-2 text-center">
+  <div class="container">
+      <form action="" id="form">
+          <div class="form-group">
+              <input type="text" class="form-control" id="search" value="{{post.title}}" hidden>
+          </div>
+          <div class="form-group">
+              <input type="submit" class="btn btn-primary" value="Show Related Videos">
+          </div>
+      </form>
+      <div class="row">
+          <div class="col-md-12">
+              <div id="videos">   
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<div class="my-2 text-center">
+    <a href="/blog" role="button" class="btn btn-primary p-2"> Go Back </a>
+</div>
+<!--Code End -->
+
+{% endblock body %}
